@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YouTube Watch History Tracker</title>
+  <style>
+    body {
+      width: 350px;
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    h1 {
+      font-size: 18px;
+      color: #c00;
+      margin-bottom: 15px;
+    }
+    h2 {
+      font-size: 16px;
+      margin-top: 20px;
+      color: #333;
+    }
+    button {
+      background-color: #c00;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-right: 5px;
+    }
+    button:hover {
+      background-color: #900;
+    }
+    .stats {
+      margin: 15px 0;
+      padding: 10px;
+      background-color: #f8f8f8;
+      border-radius: 4px;
+    }
+    .time-period {
+      margin-top: 15px;
+    }
+    select {
+      margin-top: 5px;
+      padding: 5px;
+      width: 100%;
+    }
+    .link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #c00;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .link:hover {
+      text-decoration: underline;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      font-size: 12px;
+    }
+    .status {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 12px;
+      color: #666;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+    .status-active {
+      background-color: #4CAF50;
+    }
+    .status-inactive {
+      background-color: #F44336;
+    }
+    
+    /* Dashboard styles */
+    #dashboard {
+      display: none;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #ddd;
+    }
+    .dashboard-tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+    .tab {
+      padding: 8px 15px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-radius: 4px 4px 0 0;
+    }
+    .tab.active {
+      background-color: #f8f8f8;
+      border: 1px solid #ddd;
+      border-bottom-color: #f8f8f8;
+    }
+    .dashboard-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .summary-card {
+      background-color: #f8f8f8;
+      border-radius: 4px;
+      padding: 8px;
+      text-align: center;
+    }
+    .summary-card h3 {
+      font-size: 14px;
+      margin: 0 0 5px 0;
+      color: #333;
+    }
+    .card-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #c00;
+    }
+  </style>
+</head>
+<body>
+  <div id="main-popup">
+    <h1>YouTube Watch History Tracker</h1>
+    
+    <div class="stats">
+      <div>Normal videos watched: <span id="normalCount">0</span></div>
+      <div>Shorts watched: <span id="shortsCount">0</span></div>
+      <div>Total videos: <span id="totalCount">0</span></div>
+    </div>
+    
+    <div class="time-period">
+      <div>Export time period:</div>
+      <select id="timePeriod">
+        <option value="all">All time</option>
+        <option value="day">Last 24 hours</option>
+        <option value="week">Last 7 days</option>
+        <option value="month">Last 30 days</option>
+      </select>
+    </div>
+    
+    <div>
+      <button id="exportBtn">Export JSON</button>
+      <button id="clearBtn">Clear History</button>
+    </div>
+    
+    <button id="toggleDashboardBtn" class="link" style="width: 100%; text-align: center; background: none; color: #c00; padding: 10px 0; border: none; cursor: pointer;">
+      Show Detailed Dashboard
+    </button>
+    
+    <div class="status">
+      <div id="trackerStatus">
+        <span class="status-dot status-active" id="statusDot"></span>
+        <span id="statusText">Tracker active</span>
+      </div>
+      <a href="#" id="debugLink" class="debug-link">Debug Console</a>
+    </div>
+  </div>
+  
+  <!-- Dashboard section (hidden by default) -->
+  <div id="dashboard">
+    <h2>Dashboard</h2>
+    
+    <div class="dashboard-summary">
+      <div class="summary-card">
+        <h3>Total Videos</h3>
+        <div class="card-value" id="dashTotalVideos">0</div>
+      </div>
+      <div class="summary-card">
+        <h3>Normal Videos</h3>
+        <div class="card-value" id="dashNormalVideos">0</div>
+      </div>
+      <div class="summary-card">
+        <h3>Shorts</h3>
+        <div class="card-value" id="dashShortsVideos">0</div>
+      </div>
+      <div class="summary-card">
+        <h3>Unique Channels</h3>
+        <div class="card-value" id="dashUniqueChannels">0</div>
+      </div>
+      <div class="summary-card" style="grid-column: span 2;">
+        <h3>Total Watch Time</h3>
+        <div class="card-value" id="dashWatchTime">0 min</div>
+      </div>
+    </div>
+    
+    <div class="time-period">
+      <div>Filter time range:</div>
+      <select id="dashTimeRange">
+        <option value="7">Last 7 days</option>
+        <option value="30">Last 30 days</option>
+        <option value="90">Last 90 days</option>
+        <option value="all" selected>All time</option>
+      </select>
+    </div>
+    
+    <button id="backToPopupBtn">Back</button>
+    <button id="dashExportBtn">Export Filtered Data</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

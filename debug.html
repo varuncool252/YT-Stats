@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YouTube History Tracker - Debug Console</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      color: #c00;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .debug-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 100px);
+    }
+    .control-panel {
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .log-container {
+      flex: 1;
+      background-color: #222;
+      color: #0f0;
+      font-family: monospace;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .status-container {
+      background-color: #fff;
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 10px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .status-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .status-item {
+      margin-bottom: 3px;
+    }
+    .success {
+      color: green;
+    }
+    .error {
+      color: red;
+    }
+    .warning {
+      color: orange;
+    }
+    button {
+      background-color: #c00;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    button:hover {
+      background-color: #900;
+    }
+    button#clearBtn {
+      background-color: #666;
+    }
+    button#clearBtn:hover {
+      background-color: #444;
+    }
+    .section-divider {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+    }
+    .section-divider hr {
+      flex: 1;
+      margin: 0 10px;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
+    .tab-container {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    .tab {
+      padding: 8px 15px;
+      background-color: #ddd;
+      border-radius: 4px 4px 0 0;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+    .tab.active {
+      background-color: #fff;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>YouTube History Tracker - Debug Console</h1>
+  
+  <div class="tab-container">
+    <div class="tab active" data-tab="logs">Debug Logs</div>
+    <div class="tab" data-tab="data">Stored Data</div>
+    <div class="tab" data-tab="tests">Test Tools</div>
+  </div>
+  
+  <div class="debug-container">
+    <div class="tab-content active" id="logs-content">
+      <div class="control-panel">
+        <button id="refreshBtn">Refresh Status</button>
+        <button id="clearBtn">Clear Logs</button>
+        <button id="enableLogsBtn">Enable Verbose Logging</button>
+        <span id="loggingStatus">(Standard logging enabled)</span>
+      </div>
+      
+      <div class="log-container" id="logOutput">
+        <!-- Logs will appear here -->
+        [Debug console initialized]
+      </div>
+      
+      <div class="status-container">
+        <div class="status-title">Extension Status:</div>
+        <div class="status-item" id="backgroundStatus">Background Script: <span class="warning">Checking...</span></div>
+        <div class="status-item" id="contentStatus">Content Script: <span class="warning">Checking...</span></div>
+        <div class="status-item" id="storageStatus">Storage Access: <span class="warning">Checking...</span></div>
+        <div class="status-item" id="youtubeStatus">YouTube Detection: <span class="warning">Checking...</span></div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="data-content">
+      <div class="control-panel">
+        <button id="loadDataBtn">Load Current Data</button>
+        <button id="exportDataBtn">Export Data as JSON</button>
+        <button id="testDashboardBtn">Test Dashboard with Current Data</button>
+      </div>
+      
+      <div class="log-container" id="dataOutput">
+        <!-- Data will appear here -->
+        [No data loaded yet. Click "Load Current Data" to see stored video history]
+      </div>
+      
+      <div class="status-container">
+        <div class="status-title">Data Statistics:</div>
+        <div class="status-item" id="dataTotalItems">Total Videos: <span class="warning">Unknown</span></div>
+        <div class="status-item" id="dataNormalVideos">Normal Videos: <span class="warning">Unknown</span></div>
+        <div class="status-item" id="dataShortsVideos">Shorts Videos: <span class="warning">Unknown</span></div>
+        <div class="status-item" id="dataUniqueChannels">Unique Channels: <span class="warning">Unknown</span></div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="tests-content">
+      <div class="control-panel">
+        <button id="testVideoDetectionBtn">Test Video Detection</button>
+        <button id="testShortsDetectionBtn">Test Shorts Detection</button>
+        <button id="testNavigationBtn">Test Navigation Detection</button>
+        <button id="fixDashboardBtn">Fix Dashboard Access</button>
+      </div>
+      
+      <div class="log-container" id="testOutput">
+        <!-- Test results will appear here -->
+        [No tests run yet. Select a test to run from the buttons above]
+      </div>
+      
+      <div class="status-container">
+        <div class="status-title">Test Results:</div>
+        <div class="status-item" id="testVideoResult">Video Detection: <span class="warning">Not tested</span></div>
+        <div class="status-item" id="testShortsResult">Shorts Detection: <span class="warning">Not tested</span></div>
+        <div class="status-item" id="testNavigationResult">Navigation Detection: <span class="warning">Not tested</span></div>
+        <div class="status-item" id="dashboardFixResult">Dashboard Access: <span class="warning">Not tested</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="debug.js"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YouTube Watch History Dashboard</title>
+  <style>
+    /* Simple CSS for dashboard */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+    }
+    h1 {
+      color: #c00;
+      margin: 0;
+    }
+    .dashboard-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .summary-card {
+      background-color: #f8f8f8;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+    }
+    .card-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #c00;
+      margin-top: 10px;
+    }
+    button {
+      background-color: #c00;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background-color: #a00;
+    }
+    select {
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    .status-message {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>YouTube Watch History Dashboard</h1>
+      <div class="time-filter">
+        <label for="timeRange">Time Range:</label>
+        <select id="timeRange">
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="all" selected>All time</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="dashboard-summary">
+      <div class="summary-card">
+        <h3>Total Videos Watched</h3>
+        <div class="card-value" id="totalVideos">0</div>
+      </div>
+      <div class="summary-card">
+        <h3>Normal Videos</h3>
+        <div class="card-value" id="normalVideos">0</div>
+      </div>
+      <div class="summary-card">
+        <h3>Shorts Watched</h3>
+        <div class="card-value" id="shortsVideos">0</div>
+      </div>
+      <div class="summary-card">
+        <h3>Unique Channels</h3>
+        <div class="card-value" id="uniqueChannels">0</div>
+      </div>
+    </div>
+
+    <div class="dashboard-actions">
+      <button id="backBtn">Back to Extension</button>
+      <button id="exportBtn">Export Full Data</button>
+    </div>
+    
+    <div class="status-message" id="statusMessage"></div>
+  </div>
+
+  <script src="dashboard-loader.js"></script>
+</body>
+</html>

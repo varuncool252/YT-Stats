@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Watch History Tracker",
+  "version": "1.0",
+  "description": "Track your YouTube watch history and export it in JSON format",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["*://*.youtube.com/*"],
+  "icons": {
+    "128": "icon.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icon.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["dashboard.html", "dashboard.js", "dashboard.css", "dashboard-simple.html", "dashboard-simple.js", "dashboard-loader.js", "debug.html", "debug.js", "chart.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
